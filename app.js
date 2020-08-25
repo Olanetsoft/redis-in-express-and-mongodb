@@ -5,13 +5,14 @@ const keys = require('./config/keys');
 
 require('./models/Article');
 require('./utils/redis');
+require('dotenv').config({ path: '.env' });
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-mongoose.connect(keys.MONGO_URI, { 
+mongoose.connect(process.env.MONGO_URI, { 
   useUnifiedTopology: true,
   useNewUrlParser: true
 });

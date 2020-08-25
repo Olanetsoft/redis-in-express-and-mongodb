@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 const redis = require('redis');
 const util = require('util');
-const keys = require('../config/keys')
 
-const client = redis.createClient(keys.REDIS_URL);
+const client = redis.createClient(process.env.REDIS_URL);
 client.hget = util.promisify(client.hget);
 
 // create reference for .exec
@@ -16,7 +15,7 @@ mongoose.Query.prototype.cache = function (options = { expire: 60 }) {
     this.hashKey = JSON.stringify(options.key || this.mongooseCollection.name);
 
     return this;
-}
+};
 
 // override exec function to first check cache for data
 mongoose.Query.prototype.exec = async function () {
@@ -54,4 +53,4 @@ module.exports = {
     clearHash(hashKey) {
         client.del(JSON.stringify(hashKey));
     }
-}
+};
